@@ -1,0 +1,61 @@
+-- ====== DATABASE COMMAND ======
+CREATE DATABASE nama_database;
+DROP DATABASE nama_database;
+USE nama_database; -- pilih database aktif
+
+-- ====== TABLE COMMAND ======
+CREATE TABLE users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100),
+  email VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE users;
+ALTER TABLE users ADD COLUMN age INT;
+ALTER TABLE users DROP COLUMN age;
+RENAME TABLE users TO members;
+
+-- ====== DML (Data Manipulation Language) ======
+INSERT INTO users (name, email) VALUES ('Rama', 'rama@mail.com');
+SELECT * FROM users;
+SELECT name, email FROM users WHERE id = 1;
+UPDATE users SET email = 'baru@mail.com' WHERE id = 1;
+DELETE FROM users WHERE id = 1;
+
+-- ====== JOIN ======
+SELECT u.name, o.order_id
+FROM users u
+JOIN orders o ON u.id = o.user_id;
+
+-- ====== FILTER, SORT, LIMIT ======
+SELECT * FROM users WHERE name LIKE 'R%';
+SELECT * FROM users ORDER BY created_at DESC;
+SELECT * FROM users LIMIT 10 OFFSET 20;
+
+-- ====== GROUP BY & AGGREGATE ======
+SELECT COUNT(*) FROM users;
+SELECT age, COUNT(*) FROM users GROUP BY age;
+
+-- ====== TRANSACTIONS ======
+START TRANSACTION;
+UPDATE users SET name = 'Test' WHERE id = 1;
+COMMIT;
+-- atau ROLLBACK;
+
+-- ====== USER & PRIVILEGES (DCL) ======
+CREATE USER 'rama'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON nama_database.* TO 'rama'@'localhost';
+FLUSH PRIVILEGES;
+
+-- ====== SHOW & DESCRIBE ======
+SHOW DATABASES;
+SHOW TABLES;
+DESCRIBE users;
+SHOW CREATE TABLE users;
+
+-- ====== IMPORT/EXPORT ======
+-- Export:
+-- mysqldump -u root -p nama_database > backup.sql
+-- Import:
+-- mysql -u root -p nama_database < backup.sql
